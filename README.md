@@ -5,6 +5,7 @@ Introduction
 ------------
 
 The Event Registration System has these main tasks:
+
 1. Give the event core orga team the ability to configure all needed tickets easily. (Admin)
 1. Give jugglers the possibility to buy tickets for the European Juggling Convention. (PreReg)
 2. Give the organisation team onsite the possibility to easily check what the participants have booked. (OnsiteReg)
@@ -15,13 +16,13 @@ Installation instructions
 
 ### 1. Get a copy of the project:
 
-```
+```sh
 $ git clone https://github.com/inbaz/ers
 ```
 
-### 2. Create a VirtualHost running PHP 
+### 2. Create a VirtualHost running PHP
 
-We tested on PHP 5.5, maybe 5.4 is working aswell, 5.3 doesn't
+We tested on PHP 5.5, maybe 5.4 is working as well, 5.3 doesn't work.
 
 PHP modules needed:
 - gd
@@ -31,25 +32,25 @@ PHP modules needed:
 
 ### 3. Create a mysql database and user
 
-```
-mysql> CREATE DATABASE ers CHARACTER SET utf8 COLLATE utf8_bin;
-mysql> GRANT ALL PRIVILEGES ON ers.* TO 'ers'@'localhost' IDENTIFIED BY 'CHANGE_ME';
-mysql> exit;
+```sql
+CREATE DATABASE ers CHARACTER SET utf8 COLLATE utf8_bin;
+GRANT ALL PRIVILEGES ON ers.* TO 'ers'@'localhost' IDENTIFIED BY 'CHANGE_ME';
+exit;
 ```
 
 ### 4. Get composer and install dependencies
 
-```
+```sh
 $ curl -sS https://getcomposer.org/installer | php
 $ php composer.phar install
-```    
+```
 
 ### 5. Setup doctrine
 
 Put this into config/autoload/doctrine.local.php. You can find an example in
 config/autoload/doctrine.dist.php
 
-```
+```php
 return array(
     'doctrine' => array(
         'connection' => array(
@@ -72,7 +73,7 @@ return array(
 Put this into config/autoload/ers.local.php. You can find an example in
 config/autoload/ers.dist.php
 
-```
+```php
 return array(
     'ERS' => array(
         'sender_email'      => 'prereg@eja.net',
@@ -94,11 +95,11 @@ return array(
 
 ### 7. Generate database scheme and load basic data
 
-You should run this commands with the users who is running your webserver. 
-Either login with that user or prepend to commands with i.e. "sudo -u http" or 
+You should run this commands with the users who is running your webserver.
+Either login with that user or prepend to commands with i.e. "sudo -u http" or
 "sudo -u apache".
 
-```
+```sh
 $ php bin/doctrine-module orm:validate-schema
 $ php bin/doctrine-module orm:schema-tool:create
 $ php bin/doctrine-module orm:schema-tool:update --force
@@ -107,20 +108,20 @@ $ php bin/doctrine-module dbal:import data/initial.sql
 
 ### 8. Add admin user
 
-```
+```sql
 INSERT INTO `user` (`email`, `active`) VALUES ('your.mail@example.org', '1');
 ```
 
 Check which ids have the roles "user" and "admin".
 
-```
+```sql
 INSERT INTO `user_has_role` (`user_id`, `role_id`) VALUES ('1', '4');
 INSERT INTO `user_has_role` (`user_id`, `role_id`) VALUES ('1', '5');
 ```
 
 ### 9. Set admin users password
 
-Goto http://yourdomain.org/profile/request-password, fill in your e-mail 
+Goto http://yourdomain.org/profile/request-password, fill in your e-mail
 address and request the mail in which you can find further instructions how to
 setup the password for your user.
 
